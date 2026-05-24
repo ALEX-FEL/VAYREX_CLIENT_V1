@@ -2,8 +2,11 @@ import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { PhoneFrame } from "@/components/PhoneFrame";
 import { StatusBar } from "@/components/StatusBar";
-import { MapBg } from "@/components/MapBg";
+import { GoogleMap } from "@/components/GoogleMap";
+import { LanguageSelector } from "@/components/LanguageSelector";
 import { ArrowLeft, Phone, X, Share2 } from "lucide-react";
+import { useLanguage } from "@/hooks/use-language";
+import { useGeolocation } from "@/hooks/use-geolocation";
 
 export const Route = createFileRoute("/tracking")({
   head: () => ({ meta: [{ title: "Tracking — Vayrix" }] }),
@@ -12,7 +15,11 @@ export const Route = createFileRoute("/tracking")({
 
 function Tracking() {
   const navigate = useNavigate();
+  const { t } = useLanguage();
+  const { latitude, longitude } = useGeolocation();
   const [eta, setEta] = useState(180);
+
+  const destination = { lat: 3.756, lng: 11.552 };
 
   useEffect(() => {
     const i = setInterval(() => setEta((e) => (e > 1 ? e - 1 : e)), 1000);
@@ -25,22 +32,42 @@ function Tracking() {
   return (
     <PhoneFrame>
       <div className="relative h-full min-h-screen sm:min-h-[860px]">
-        <MapBg withCar />
-        <StatusBar />
+        <GoogleMap
+          center={latitude && longitude ? { lat: latitude, lng: longitude } : undefined}
+          origin={latitude && longitude ? { lat: latitude, lng: longitude } : undefined}
+          destination={destination}
+          showRoute={latitude !== null && longitude !== null}
+          drivers={[
+            { position: { lat: 3.848, lng: 11.502 }, name: "Eric T." },
+            { position: { lat: 3.838, lng: 11.492 }, name: "Marie K." },
+            { position: { lat: 3.858, lng: 11.512 }, name: "Paul N." },
+          ]}
+          className="absolute inset-0"
+        />
 
-        <div className="absolute top-12 left-4 right-4 flex items-center justify-between">
-          <button
-            onClick={() => navigate({ to: "/home" })}
-            className="h-10 w-10 rounded-full bg-[#141B3D]/90 backdrop-blur border border-white/10 flex items-center justify-center"
-          >
-            <ArrowLeft className="h-4 w-4 text-white" />
-          </button>
-          <div className="px-4 py-2 rounded-2xl bg-[#141B3D]/95 backdrop-blur border border-white/10 text-center">
-            <p className="text-[10px] uppercase tracking-widest text-[#B8BED6]">Arriving in</p>
-            <p className="text-lg font-bold text-gradient-primary tabular-nums">{mm}:{ss}</p>
+        <div className="absolute top-0 left-0 right-0 bg-gradient-to-b from-[#0A0E27]/95 to-transparent pt-2 pb-6 px-4">
+          <div className="flex items-center justify-between mb-2">
+            <StatusBar />
+            <LanguageSelector />
           </div>
-          <div className="h-10 w-10" />
 
+          <div className="flex items-center justify-between mt-2">
+            <button
+              onClick={() => navigate({ to: "/home" })}
+              className="h-10 w-10 rounded-full bg-[#141B3D]/90 backdrop-blur border border-white/10 flex items-center justify-center"
+            >
+              <ArrowLeft className="h-4 w-4 text-white" />
+            </button>
+            <div className="px-4 py-2 rounded-2xl bg-[#141B3D]/95 backdrop-blur border border-white/10 text-center">
+              <p className="text-[10px] uppercase tracking-widest text-[#B8BED6]">
+                {t.tracking.arrivingIn}
+              </p>
+              <p className="text-lg font-bold text-gradient-primary tabular-nums">
+                {mm}:{ss}
+              </p>
+            </div>
+            <div className="h-10 w-10" />
+          </div>
         </div>
 
         <div className="absolute bottom-6 left-4 right-4 rounded-2xl bg-[#141B3D]/95 backdrop-blur border border-white/10 p-5 shadow-card animate-float-up space-y-4">
@@ -49,24 +76,34 @@ function Tracking() {
               ET
             </div>
             <div className="flex-1">
-              <p className="text-sm font-semibold">Eric T. is on the way</p>
+              <p className="text-sm font-semibold">
+                {t.driver.driverName} {t.tracking.onTheWay.toLowerCase()}
+              </p>
               <p className="text-xs text-[#B8BED6]">Toyota Yaris · LT 782 DJ</p>
             </div>
           </div>
 
           <div className="relative pl-5">
-            <div className="absolute left-1.5 top-1 bottom-1 w-px bg-white/15" />
-            <Row dotClass="bg-[#3B6BFF]" title="Essos, Yaoundé" subtitle="Pickup" />
+            <div className="absolute left-1.5 top-1 bottom-1 w-px bg-gradient-to-b from-[#3B6BFF] via-white/15 to-[#7B5CFF]" />
+            <Row
+              dotClass="bg-[#3B6BFF] shadow-[0_0_10px_#3B6BFF]"
+              title="Essos, Yaoundé"
+              subtitle={t.tracking.pickup}
+            />
             <div className="h-3" />
-            <Row dotClass="bg-[#7B5CFF]" title="Nsimalen Airport" subtitle="Destination · 7.8 km" />
+            <Row
+              dotClass="bg-[#7B5CFF] shadow-[0_0_10px_#7B5CFF]"
+              title="Nsimalen Airport"
+              subtitle={`${t.tracking.destination} · 7.8 ${t.tracking.distance}`}
+            />
           </div>
 
           <div className="grid grid-cols-3 gap-2">
-            <ActionBtn icon={<Phone className="h-4 w-4" />} label="Call" />
-            <ActionBtn icon={<Share2 className="h-4 w-4" />} label="Share" />
+            <ActionBtn icon={<Phone className="h-4 w-4" />} label={t.tracking.call} />
+            <ActionBtn icon={<Share2 className="h-4 w-4" />} label={t.tracking.share} />
             <ActionBtn
               icon={<X className="h-4 w-4" />}
-              label="Cancel"
+              label={t.tracking.cancel}
               variant="danger"
               onClick={() => navigate({ to: "/home" })}
             />
@@ -76,7 +113,7 @@ function Tracking() {
             onClick={() => navigate({ to: "/payment" })}
             className="w-full h-12 rounded-xl bg-gradient-primary text-white font-semibold text-sm shadow-glow active:scale-[0.99] transition"
           >
-            I've arrived
+            {t.tracking.arrived}
           </button>
         </div>
       </div>
@@ -87,7 +124,7 @@ function Tracking() {
 function Row({ dotClass, title, subtitle }: { dotClass: string; title: string; subtitle: string }) {
   return (
     <div className="relative flex items-start gap-3">
-      <span className={`absolute -left-[18px] top-1.5 h-2.5 w-2.5 rounded-full ${dotClass}`} />
+      <span className={`absolute -left-[18px] top-1.5 h-3 w-3 rounded-full ${dotClass}`} />
       <div>
         <p className="text-sm font-medium">{title}</p>
         <p className="text-xs text-[#B8BED6]">{subtitle}</p>
@@ -97,8 +134,16 @@ function Row({ dotClass, title, subtitle }: { dotClass: string; title: string; s
 }
 
 function ActionBtn({
-  icon, label, variant, onClick,
-}: { icon: React.ReactNode; label: string; variant?: "danger"; onClick?: () => void }) {
+  icon,
+  label,
+  variant,
+  onClick,
+}: {
+  icon: React.ReactNode;
+  label: string;
+  variant?: "danger";
+  onClick?: () => void;
+}) {
   return (
     <button
       onClick={onClick}
