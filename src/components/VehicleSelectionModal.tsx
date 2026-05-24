@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { X, Check } from "lucide-react";
+import { X, Check, Bike, Car, Crown } from "lucide-react";
 import { useLanguage } from "@/hooks/use-language";
 
 type VehicleType = "moto" | "standard" | "premium";
@@ -9,22 +9,26 @@ const vehicleData: {
     image: string;
     basePrice: number;
     multiplier: number;
+    icon: typeof Bike;
   };
 } = {
   moto: {
-    image: "https://images.pexels.com/photos/104842/bmw-motorcycle-motorbike-vehicle-104842.jpeg?auto=compress&cs=tinysrgb&w=400",
+    image: "https://images.unsplash.com/photo-1558981806-ec5f2d0c4c7b?w=800&auto=format&fit=crop&q=60",
     basePrice: 500,
     multiplier: 0.7,
+    icon: Bike,
   },
   standard: {
-    image: "https://images.pexels.com/photos/170811/pexels-photo-170811.jpeg?auto=compress&cs=tinysrgb&w=400",
+    image: "https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?w=800&auto=format&fit=crop&q=60",
     basePrice: 1000,
     multiplier: 1.0,
+    icon: Car,
   },
   premium: {
-    image: "https://images.pexels.com/photos/2116995/pexels-photo-2116995.jpeg?auto=compress&cs=tinysrgb&w=400",
+    image: "https://images.unsplash.com/photo-1503376780353-7e8893495856?w=800&auto=format&fit=crop&q=60",
     basePrice: 2000,
     multiplier: 1.5,
+    icon: Crown,
   },
 };
 
@@ -88,7 +92,7 @@ export function VehicleSelectionModal({
                       : "border-white/5"
                   }`}
                 >
-                  <div className="relative h-32 overflow-hidden">
+                  <div className="relative h-40 overflow-hidden">
                     <img
                       src={vehicleData[vehicle].image}
                       alt={vehicle}
@@ -101,9 +105,12 @@ export function VehicleSelectionModal({
                         isHovered || isSelected ? "opacity-80" : "opacity-60"
                       }`}
                     />
+                    <div className="absolute top-3 right-3 h-10 w-10 rounded-full bg-gradient-primary/90 flex items-center justify-center shadow-glow">
+                      <Icon className="h-5 h-5 text-white" />
+                    </div>
                   </div>
 
-                  <div className="absolute bottom-0 left-0 right-0 p-4">
+                  <div className="p-4 bg-[#141B3D]">
                     <div className="flex items-center justify-between">
                       <div>
                         <p className="text-base font-bold">
