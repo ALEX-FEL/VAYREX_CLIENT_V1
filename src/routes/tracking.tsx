@@ -18,30 +18,70 @@ function Tracking() {
   const { t } = useLanguage();
   const { latitude, longitude } = useGeolocation();
   const [eta, setEta] = useState(180);
+  const [driverPosition, setDriverPosition] = useState({ lat: 3.848, lng: 11.502 });
 
-  const destination = { lat: 3.756, lng: 11.552 };
+  const driverInfo = {
+    name: "Eric T.",
+    phone: "+237699123456",
+    vehicle: "Toyota Yaris",
+    plate: "LT 782 DJ",
+  };
+
+  // Simulate driver moving towards user
+  useEffect(() => {
+    if (!latitude || !longitude) return;
+
+    const moveInterval = setInterval(() => {
+      setDriverPosition((prev) => {
+        const latDiff = (latitude - prev.lat) * 0.05;
+        const lngDiff = (longitude - prev.lng) * 0.05;
+        return {
+          lat: prev.lat + latDiff,
+          lng: prev.lng + lngDiff,
+        };
+      });
+    }, 1000);
+
+    return () => clearInterval(moveInterval);
+  }, [latitude, longitude]);
 
   useEffect(() => {
-    const i = setInterval(() => setEta((e) => (e > 1 ? e - 1 : e)), 1000);
+    const i = setInterval(() => setEta((e) => (e > 1 ? e - 1 : 0)), 1000);
     return () => clearInterval(i);
   }, []);
 
   const mm = String(Math.floor(eta / 60)).padStart(2, "0");
   const ss = String(eta % 60).padStart(2, "0");
 
+  const handleCall = () => {
+    window.location.href = `tel:${driverInfo.phone}`;
+  };
+
+  const handleCancel = () => {
+    navigate({ to: "/home" });
+  };
+
   return (
     <PhoneFrame>
       <div className="relative h-full min-h-screen sm:min-h-[860px]">
         <GoogleMap
           center={latitude && longitude ? { lat: latitude, lng: longitude } : undefined}
-          origin={latitude && longitude ? { lat: latitude, lng: longitude } : undefined}
-          destination={destination}
+          origin={driverPosition}
+          destination={
+            latitude && longitude ? { lat: latitude, lng: longitude } : undefined
+          }
           showRoute={latitude !== null && longitude !== null}
-          drivers={[
-            { position: { lat: 3.848, lng: 11.502 }, name: "Eric T." },
-            { position: { lat: 3.838, lng: 11.492 }, name: "Marie K." },
-            { position: { lat: 3.858, lng: 11.512 }, name: "Paul N." },
-          ]}
+          markers={
+            latitude && longitude
+              ? [
+                  {
+                    position: { lat: latitude, lng: longitude },
+                    title: t.tracking.pickup,
+                  },
+                ]
+              : []
+          }
+          drivers={[{ position: driverPosition, name: driverInfo.name }]}
           className="absolute inset-0"
         />
 
@@ -77,9 +117,11 @@ function Tracking() {
             </div>
             <div className="flex-1">
               <p className="text-sm font-semibold">
-                {t.driver.driverName} {t.tracking.onTheWay.toLowerCase()}
+                {driverInfo.name} {t.tracking.onTheWay.toLowerCase()}
               </p>
-              <p className="text-xs text-[#B8BED6]">Toyota Yaris · LT 782 DJ</p>
+              <p className="text-xs text-[#B8BED6]">
+                {driverInfo.vehicle} · {driverInfo.plate}
+              </p>
             </div>
           </div>
 
@@ -87,33 +129,33 @@ function Tracking() {
             <div className="absolute left-1.5 top-1 bottom-1 w-px bg-gradient-to-b from-[#3B6BFF] via-white/15 to-[#7B5CFF]" />
             <Row
               dotClass="bg-[#3B6BFF] shadow-[0_0_10px_#3B6BFF]"
-              title="Essos, Yaoundé"
+              title={driverInfo.name}
               subtitle={t.tracking.pickup}
             />
             <div className="h-3" />
             <Row
               dotClass="bg-[#7B5CFF] shadow-[0_0_10px_#7B5CFF]"
-              title="Nsimalen Airport"
+              title={t.tracking.destination}
               subtitle={`${t.tracking.destination} · 7.8 ${t.tracking.distance}`}
             />
           </div>
 
           <div className="grid grid-cols-2 gap-2">
-            <ActionBtn icon={<Phone className="h-4 w-4" />} label={t.tracking.call} />
-            <ActionBtn
-              icon={<X className="h-4 w-4" />}
-              label={t.tracking.cancel}
-              variant="danger"
-              onClick={() => navigate({ to: "/home" })}
-            />
+            <button
+              onClick={handleCall}
+              className="h-12 rounded-xl flex flex-col items-center justify-center gap-0.5 border transition bg-[#0A0E27] border-white/10 text-white hover:bg-[#3B6BFF]/20"
+            >
+              <Phone className="h-4 w-4" />
+              <span className="text-[10px]">{t.tracking.call}</span>
+            </button>
+            <button
+              onClick={handleCancel}
+              className="h-12 rounded-xl flex flex-col items-center justify-center gap-0.5 border transition bg-red-500/10 border-red-500/30 text-red-300 hover:bg-red-500/20"
+            >
+              <X className="h-4 w-4" />
+              <span className="text-[10px]">{t.tracking.cancel}</span>
+            </button>
           </div>
-
-          <button
-            onClick={() => navigate({ to: "/payment" })}
-            className="w-full h-12 rounded-xl bg-gradient-primary text-white font-semibold text-sm shadow-glow active:scale-[0.99] transition"
-          >
-            {t.tracking.arrived}
-          </button>
         </div>
       </div>
     </PhoneFrame>
@@ -129,31 +171,5 @@ function Row({ dotClass, title, subtitle }: { dotClass: string; title: string; s
         <p className="text-xs text-[#B8BED6]">{subtitle}</p>
       </div>
     </div>
-  );
-}
-
-function ActionBtn({
-  icon,
-  label,
-  variant,
-  onClick,
-}: {
-  icon: React.ReactNode;
-  label: string;
-  variant?: "danger";
-  onClick?: () => void;
-}) {
-  return (
-    <button
-      onClick={onClick}
-      className={`h-12 rounded-xl flex flex-col items-center justify-center gap-0.5 border transition ${
-        variant === "danger"
-          ? "bg-red-500/10 border-red-500/30 text-red-300"
-          : "bg-[#0A0E27] border-white/10 text-white"
-      }`}
-    >
-      {icon}
-      <span className="text-[10px]">{label}</span>
-    </button>
   );
 }
