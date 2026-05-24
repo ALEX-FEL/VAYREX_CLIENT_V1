@@ -2,15 +2,15 @@ import { ReactNode } from "react";
 import { PhoneFrame } from "./PhoneFrame";
 import { StatusBar } from "./StatusBar";
 import { Link, useLocation } from "@tanstack/react-router";
-import { Hop as Home, Clock, User, MapPin } from "lucide-react";
+import { Hop as Home, Clock, User, MapPin, Languages } from "lucide-react";
 import { useLanguage } from "@/hooks/use-language";
-import { LanguageSelector } from "./LanguageSelector";
 
 const tabs = [
   { to: "/home", icon: Home, labelKey: "home" as const },
   { to: "/booking", icon: MapPin, labelKey: "ride" as const },
   { to: "/history", icon: Clock, labelKey: "trips" as const },
   { to: "/profile", icon: User, labelKey: "me" as const },
+  { to: "#", icon: Languages, labelKey: "lang" as const, isLanguage: true },
 ] as const;
 
 export function AppShell({
@@ -23,7 +23,7 @@ export function AppShell({
   hideStatus?: boolean;
 }) {
   const { pathname } = useLocation();
-  const { t } = useLanguage();
+  const { t, language, setLanguage } = useLanguage();
 
   return (
     <PhoneFrame>
@@ -31,7 +31,6 @@ export function AppShell({
         {!hideStatus && (
           <div className="flex items-center justify-between px-4 pt-2">
             <StatusBar />
-            <LanguageSelector />
           </div>
         )}
         <div className="flex-1 overflow-y-auto pb-24">{children}</div>
@@ -41,11 +40,29 @@ export function AppShell({
               {tabs.map((tab) => {
                 const active = pathname === tab.to;
                 const Icon = tab.icon;
+
+                if (tab.isLanguage) {
+                  return (
+                    <button
+                      key="lang"
+                      onClick={() => setLanguage(language === "fr" ? "en" : "fr")}
+                      className="flex flex-col items-center gap-1 px-3 py-1.5 rounded-xl transition-all hover:bg-white/5"
+                    >
+                      <div className="p-1.5 rounded-lg">
+                        <Icon className="h-5 w-5 text-[#B8BED6]" />
+                      </div>
+                      <span className="text-[10px] font-medium text-[#B8BED6]">
+                        {language === "fr" ? "FR" : "AN"}
+                      </span>
+                    </button>
+                  );
+                }
+
                 return (
                   <Link
                     key={tab.to}
                     to={tab.to}
-                    className="flex flex-col items-center gap-1 px-4 py-1.5 rounded-xl transition-all"
+                    className="flex flex-col items-center gap-1 px-3 py-1.5 rounded-xl transition-all"
                   >
                     <div
                       className={`p-1.5 rounded-lg transition-all ${

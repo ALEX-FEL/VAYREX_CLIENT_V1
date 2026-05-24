@@ -1,32 +1,20 @@
-import { useLanguage } from '@/hooks/use-language';
+import { useLanguage } from "@/hooks/use-language";
+import { Video as LucideIcon, Languages } from "lucide-react";
 
 export function LanguageSelector() {
   const { language, setLanguage } = useLanguage();
 
   return (
-    <div className="flex items-center gap-1 px-2 py-1.5 rounded-xl bg-[#141B3D] border border-white/5">
-      <button
-        onClick={() => setLanguage('fr')}
-        className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg transition-all text-xs font-semibold ${
-          language === 'fr'
-            ? 'bg-gradient-primary text-white shadow-glow'
-            : 'text-[#B8BED6] hover:text-white'
-        }`}
-      >
-        <span className="text-sm">🇨🇲</span>
-        <span>FR</span>
-      </button>
-      <button
-        onClick={() => setLanguage('en')}
-        className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg transition-all text-xs font-semibold ${
-          language === 'en'
-            ? 'bg-gradient-primary text-white shadow-glow'
-            : 'text-[#B8BED6] hover:text-white'
-        }`}
-      >
-        <span className="text-sm">🇨🇲</span>
-        <span>AN</span>
-      </button>
-    </div>
+    <button
+      onClick={() => setLanguage(language === "fr" ? "en" : "fr")}
+      className="flex flex-col items-center gap-1 px-3 py-1.5 rounded-xl transition-all hover:bg-white/5"
+    >
+      <div className="p-1.5 rounded-lg">
+        <Languages className="h-5 w-5 text-[#B8BED6]" />
+      </div>
+      <span className="text-[10px] font-semibold text-[#B8BED6]">
+        {language === "fr" ? "FR" : "AN"}
+      </span>
+    </button>
   );
 }

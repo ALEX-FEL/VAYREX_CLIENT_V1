@@ -1,7 +1,8 @@
 import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { VayrixLogo } from "@/components/VayrixLogo";
-import { MapPin, Navigation, Plane, Store, Building2, ArrowRight, Search, MapPinned, Star, Clock } from "lucide-react";
+import { VehicleSelectionModal } from "@/components/VehicleSelectionModal";
+import { MapPin, Navigation, Plane, Store, Building2, ArrowRight, Search, Star } from "lucide-react";
 import { useLanguage } from "@/hooks/use-language";
 import { useAuth } from "@/hooks/use-auth";
 import { useGeolocation } from "@/hooks/use-geolocation";
@@ -11,6 +12,8 @@ export const Route = createFileRoute("/home")({
   head: () => ({ meta: [{ title: "Home — Vayrix" }] }),
   component: Home,
 });
+
+type VehicleType = "moto" | "standard" | "premium";
 
 const popularPlaces = [
   { nameKey: "airport", name: { fr: "Aéroport Nsimalen", en: "Nsimalen Airport" }, subtitle: { fr: "Yaoundé", en: "Yaoundé" }, icon: Plane },
@@ -27,6 +30,7 @@ function Home() {
   const [destination, setDestination] = useState("");
   const [suggestions, setSuggestions] = useState<typeof popularPlaces>([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
+  const [showVehicleModal, setShowVehicleModal] = useState(false);
 
   useEffect(() => {
     if (destination.length > 0) {
@@ -42,7 +46,16 @@ function Home() {
   }, [destination, language]);
 
   const handleBookRide = () => {
-    navigate({ to: "/booking", search: { destination } });
+    if (destination.trim().length > 0) {
+      setShowVehicleModal(true);
+    }
+  };
+
+  const handleVehicleConfirm = (vehicle: VehicleType, price: number) => {
+    navigate({
+      to: "/booking",
+      search: { destination, vehicle, price },
+    });
   };
 
   const selectSuggestion = (place: typeof popularPlaces[0]) => {
@@ -90,7 +103,7 @@ function Home() {
             </div>
             <div>
               <h2 className="text-lg font-bold">{t.home.title}</h2>
-              <p className="text-xs text-[#B8BED6]">{t.home.subtitle || t.home.whereTo}</p>
+              <p className="text-xs text-[#B8BED6]">{t.home.whereTo}</p>
             </div>
           </div>
 
@@ -154,7 +167,12 @@ function Home() {
 
             <button
               onClick={handleBookRide}
-              className="mt-4 w-full h-14 rounded-2xl bg-gradient-primary text-white font-semibold text-base shadow-[0_10px_40px_-10px_rgba(59,107,255,0.6)] flex items-center justify-center gap-2 active:scale-[0.98] transition transform"
+              disabled={!destination.trim()}
+              className={`mt-4 w-full h-14 rounded-2xl font-semibold text-base flex items-center justify-center gap-2 active:scale-[0.98] transition transform ${
+                destination.trim()
+                  ? "bg-gradient-primary text-white shadow-[0_10px_40px_-10px_rgba(59,107,255,0.6)]"
+                  : "bg-white/10 text-white/50 cursor-not-allowed"
+              }`}
             >
               {t.home.bookRide}
               <ArrowRight className="h-5 w-5" />
@@ -189,6 +207,13 @@ function Home() {
           </div>
         </section>
       </div>
+
+      <VehicleSelectionModal
+        isOpen={showVehicleModal}
+        onClose={() => setShowVehicleModal(false)}
+        onConfirm={handleVehicleConfirm}
+        distance={7.8}
+      />
     </AppShell>
   );
 }
