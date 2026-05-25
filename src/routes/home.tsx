@@ -71,32 +71,39 @@ function Home() {
       <div className="px-5 pt-2 pb-6 space-y-6">
         <header className="flex items-center justify-between animate-float-up">
           <div className="flex items-center gap-3">
-            <VayrixLogo size={44} />
+            
+            {/* Avatar à gauche */}
+            <Link
+              to="/profile"
+              className="h-12 w-12 rounded-full bg-gradient-to-br from-[#3B6BFF] to-[#7B5CFF] flex items-center justify-center text-white font-bold shadow-glow overflow-hidden border-2 border-white/20"
+            >
+              {profile?.avatar_url ? (
+                <img
+                  src={profile.avatar_url}
+                  alt="Profile"
+                  className="h-full w-full object-cover"
+                />
+              ) : (
+                <span className="text-sm">
+                  {profile
+                    ? `${profile.first_name[0]}${profile.last_name[0]}`
+                    : "U"}
+                </span>
+              )}
+            </Link>
+
+            {/* Nom utilisateur */}
             <div>
-              <p className="text-[11px] text-[#B8BED6] uppercase tracking-wider">
-                {t.common.hello}
-              </p>
               <h1 className="text-lg font-semibold leading-tight">
-                {profile ? `${profile.first_name} ${profile.last_name}` : "Vayrix User"}
+                {profile
+                  ? `${profile.first_name} ${profile.last_name}`
+                  : "Vayrix User"}
               </h1>
             </div>
           </div>
-          <Link
-            to="/profile"
-            className="h-12 w-12 rounded-full bg-gradient-to-br from-[#3B6BFF] to-[#7B5CFF] flex items-center justify-center text-white font-bold shadow-glow overflow-hidden border-2 border-white/20"
-          >
-            {profile?.avatar_url ? (
-              <img
-                src={profile.avatar_url}
-                alt="Profile"
-                className="h-full w-full object-cover"
-              />
-            ) : (
-              <span className="text-sm">
-                {profile ? `${profile.first_name[0]}${profile.last_name[0]}` : "U"}
-              </span>
-            )}
-          </Link>
+
+          {/* Logo à droite */}
+          <VayrixLogo size={44} />
         </header>
 
         <section className="rounded-3xl bg-gradient-to-br from-[#1a2348] via-[#141B3D] to-[#0A0E27] border border-white/5 p-6 shadow-[0_20px_60px_-20px_rgba(59,107,255,0.4)] animate-float-up [animation-delay:60ms]">
