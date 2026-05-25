@@ -43,10 +43,10 @@ function Payment() {
   return (
     <PhoneFrame>
       <div className="flex flex-col h-full min-h-screen sm:min-h-[860px]">
-        <div className="flex items-center justify-between px-4 pt-2">
+        {/* <div className="flex items-center justify-between px-4 pt-2">
           <StatusBar />
           <LanguageSelector />
-        </div>
+        </div> */}
         <div className="px-5 py-4 flex items-center gap-3">
           <button
             onClick={() => navigate({ to: "/tracking" })}

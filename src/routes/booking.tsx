@@ -52,8 +52,8 @@ function Booking() {
 
         <div className="absolute top-0 left-0 right-0 bg-gradient-to-b from-[#0A0E27]/95 to-transparent pt-2 pb-6 px-4">
           <div className="flex items-center justify-between mb-2">
-            <StatusBar />
-            <LanguageSelector />
+            {/* <StatusBar /> */}
+            {/* <LanguageSelector /> */}
           </div>
 
           <div className="flex items-center justify-between mt-2">

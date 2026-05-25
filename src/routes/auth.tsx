@@ -54,9 +54,9 @@ function Auth() {
   return (
     <PhoneFrame>
       <div className="flex flex-col h-full min-h-screen sm:min-h-[860px]">
-        <div className="flex items-center justify-between px-4 pt-2">
+        {/* <div className="flex items-center justify-between px-4 pt-2">
           <StatusBar />
-        </div>
+        </div> */}
         <div className="flex-1 px-6 pt-6 pb-8 flex flex-col">
           <div className="flex items-center justify-between animate-float-up">
             <div className="flex items-center gap-3">
