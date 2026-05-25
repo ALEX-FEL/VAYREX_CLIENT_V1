@@ -35,7 +35,7 @@ export function AppShell({
       <div className="flex flex-col h-full min-h-screen sm:min-h-[860px] sm:h-[860px]">
         {!hideStatus && (
           <div className="flex items-center justify-between px-4 pt-2">
-            <StatusBar />
+            {/* <StatusBar /> */}
           </div>
         )}
         <div className="flex-1 overflow-y-auto pb-24">{children}</div>
