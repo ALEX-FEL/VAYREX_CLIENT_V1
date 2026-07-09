@@ -2,6 +2,7 @@ import { r as reactExports, j as jsxRuntimeExports } from "../_libs/react.mjs";
 import { d as useNavigate, L as Link } from "../_libs/tanstack__react-router.mjs";
 import { P as PhoneFrame } from "./PhoneFrame-VZ7uAdWY.mjs";
 import { S as StatusBar } from "./StatusBar-BzTgnpYa.mjs";
+import { V as VayrixLogo } from "./VayrixLogo-BKJpA2Rr.mjs";
 import { p as Mail, E as EyeOff, q as Eye, r as Lock } from "../_libs/lucide-react.mjs";
 import "../_libs/tanstack__router-core.mjs";
 import "../_libs/tanstack__history.mjs";
@@ -16,43 +17,6 @@ import "crypto";
 import "async_hooks";
 import "stream";
 import "../_libs/isbot.mjs";
-function VayrixLogo({ size = 88 }) {
-  return /* @__PURE__ */ jsxRuntimeExports.jsxs(
-    "div",
-    {
-      className: "relative flex items-center justify-center",
-      style: { width: size, height: size },
-      children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsx(
-          "div",
-          {
-            className: "absolute inset-0 rounded-3xl blur-2xl opacity-70 bg-gradient-primary animate-pulse-glow"
-          }
-        ),
-        /* @__PURE__ */ jsxRuntimeExports.jsx(
-          "div",
-          {
-            className: "relative rounded-3xl bg-gradient-primary flex items-center justify-center shadow-glow",
-            style: { width: size, height: size },
-            children: /* @__PURE__ */ jsxRuntimeExports.jsxs("svg", { viewBox: "0 0 32 32", width: size * 0.55, height: size * 0.55, fill: "none", children: [
-              /* @__PURE__ */ jsxRuntimeExports.jsx(
-                "path",
-                {
-                  d: "M6 6 L16 26 L26 6",
-                  stroke: "white",
-                  strokeWidth: "3.2",
-                  strokeLinecap: "round",
-                  strokeLinejoin: "round"
-                }
-              ),
-              /* @__PURE__ */ jsxRuntimeExports.jsx("circle", { cx: "16", cy: "9", r: "1.8", fill: "white" })
-            ] })
-          }
-        )
-      ]
-    }
-  );
-}
 function Auth() {
   const [mode, setMode] = reactExports.useState("login");
   const [showPw, setShowPw] = reactExports.useState(false);
