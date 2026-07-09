@@ -15,7 +15,7 @@ import "crypto";
 import "async_hooks";
 import "stream";
 import "../_libs/isbot.mjs";
-const appCss = "/assets/styles-vWA2Yd77.css";
+const appCss = "/assets/styles-BPap9jXH.css";
 function NotFoundComponent() {
   return /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex min-h-screen items-center justify-center bg-[#0A0E27] px-4", children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "max-w-md text-center", children: [
     /* @__PURE__ */ jsxRuntimeExports.jsx("h1", { className: "text-7xl font-bold text-gradient-primary", children: "404" }),
@@ -169,7 +169,7 @@ const Route$2 = createFileRoute("/booking")({
   }),
   component: lazyRouteComponent($$splitComponentImporter$2, "component")
 });
-const $$splitComponentImporter$1 = () => import("./auth-BaJTPfxl.mjs");
+const $$splitComponentImporter$1 = () => import("./auth-Baz5FNoI.mjs");
 const Route$1 = createFileRoute("/auth")({
   head: () => ({
     meta: [{
@@ -178,7 +178,7 @@ const Route$1 = createFileRoute("/auth")({
   }),
   component: lazyRouteComponent($$splitComponentImporter$1, "component")
 });
-const $$splitComponentImporter = () => import("./index-GquLvAR8.mjs");
+const $$splitComponentImporter = () => import("./index-t9IoYBpX.mjs");
 const Route = createFileRoute("/")({
   head: () => ({
     meta: [{
